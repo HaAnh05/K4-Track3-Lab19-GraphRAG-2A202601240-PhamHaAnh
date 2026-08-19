@@ -77,16 +77,21 @@ Do not answer the question. Return strict JSON only.
 
 def extract_seeds(query: str) -> list:
     """Trích xuất danh sách thực thể hạt nhân từ câu hỏi qua LLM."""
-    obj, _ = groq_json(SEED_SYSTEM, f"""
+    try:
+        obj, _ = groq_json(SEED_SYSTEM, f"""
 Question: {query}
-Return {{"seeds":[{{"name":"...","type":"Company|Person|Technology|null"}}]}}
+Return:
+{{"seeds":[{{"name":"...","type":"Company|Person|Technology|null"}}]}}
 """)
-    return [
-        {"name": norm_space(x.get("name")),
-         "type": x.get("type") if x.get("type") in ALLOWED_NODE_TYPES else None}
-        for x in obj.get("seeds", [])
-        if norm_space(x.get("name"))
-    ]
+        return [
+            {"name": norm_space(x.get("name")),
+             "type": x.get("type") if x.get("type") in ALLOWED_NODE_TYPES else None}
+            for x in obj.get("seeds", [])
+            if norm_space(x.get("name"))
+        ]
+    except Exception as e:
+        print(f"[Seed Extraction Fallback] Lỗi trích xuất seed: {e}")
+        return []
 
 entity_match_vectors = None
 entity_match_store = None
@@ -258,13 +263,19 @@ def generate_answer(question: str, context: str) -> dict:
     """Sinh câu trả lời dựa trên context được cung cấp."""
     prompt = f"QUESTION:\n{question}\n\nCONTEXT:\n{context}\n\nANSWER:"
     t0 = time.perf_counter()
-    text, usage = groq_chat(
-        [
-            {"role": "system", "content": ANSWER_SYSTEM},
-            {"role": "user", "content": prompt}
-        ],
-        model=GROQ_MODEL
-    )
+    try:
+        text, usage = groq_chat(
+            [
+                {"role": "system", "content": ANSWER_SYSTEM},
+                {"role": "user", "content": prompt}
+            ],
+            model=GROQ_MODEL
+        )
+    except Exception as e:
+        print(f"[Generate Warning] Lỗi sinh câu trả lời: {e}")
+        text = "Information not fully available in context."
+        usage = {}
+        
     return {
         "answer": text.strip(),
         "latency_s": time.perf_counter() - t0,

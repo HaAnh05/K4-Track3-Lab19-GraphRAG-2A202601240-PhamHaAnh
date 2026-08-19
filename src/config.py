@@ -36,25 +36,21 @@ NEO4J_USER = get_secret("NEO4J_USER", get_secret("NEO4J_USERNAME", "neo4j"))
 NEO4J_PASSWORD = get_secret("NEO4J_PASSWORD", "")
 NEO4J_DATABASE = get_secret("NEO4J_DATABASE", "neo4j")
 
-# LLM configuration (Groq & OpenAI)
+# LLM configuration (Groq & OpenAI) - Sử dụng openai/gpt-oss-20b mặc định tốc độ cao & ổn định
 GROQ_API_KEY = get_secret("GROQ_API_KEY", "")
-GROQ_MODEL = get_secret("GROQ_MODEL", "openai/gpt-oss-120b")
+GROQ_MODEL = get_secret("GROQ_MODEL", "openai/gpt-oss-20b")
+if GROQ_MODEL == "openai/gpt-oss-120b":
+    GROQ_MODEL = "openai/gpt-oss-20b"
 
 JUDGE_PROVIDER = get_secret("JUDGE_PROVIDER", "groq").lower()
-JUDGE_MODEL = get_secret("JUDGE_MODEL", "openai/gpt-oss-120b")
+JUDGE_MODEL = get_secret("JUDGE_MODEL", "openai/gpt-oss-20b")
+if JUDGE_MODEL == "openai/gpt-oss-120b":
+    JUDGE_MODEL = "openai/gpt-oss-20b"
+
 OPENAI_API_KEY = get_secret("OPENAI_API_KEY", "")
 HF_TOKEN = get_secret("HF_TOKEN", "")
 
-# Data paths (tự động fallback nếu chạy trên local hoặc colab)
-if Path("data/hackernoon_subset.csv").exists():
-    DATA_PATH = "data/hackernoon_subset.csv"
-elif Path("/content/data/hackernoon_subset.csv").exists():
-    DATA_PATH = "/content/data/hackernoon_subset.csv"
-elif Path("/content/hackernoon_subset.csv").exists():
-    DATA_PATH = "/content/hackernoon_subset.csv"
-else:
-    DATA_PATH = "data/hackernoon_subset.csv"
-
+# Data paths
 if Path("data/graphrag_golden_50_first5000.csv").exists():
     GOLDEN_PATH = "data/graphrag_golden_50_first5000.csv"
 elif Path("data/golden_dataset.csv").exists():
@@ -65,6 +61,15 @@ elif Path("/content/golden_dataset.csv").exists():
     GOLDEN_PATH = "/content/golden_dataset.csv"
 else:
     GOLDEN_PATH = "data/golden_dataset.csv"
+
+if Path("data/hackernoon_subset.csv").exists():
+    DATA_PATH = "data/hackernoon_subset.csv"
+elif Path("/content/data/hackernoon_subset.csv").exists():
+    DATA_PATH = "/content/data/hackernoon_subset.csv"
+elif Path("/content/hackernoon_subset.csv").exists():
+    DATA_PATH = "/content/hackernoon_subset.csv"
+else:
+    DATA_PATH = "data/hackernoon_subset.csv"
 
 # Pipeline Scale Guard limits
 LAB_MAX_ARTICLES = 1500
