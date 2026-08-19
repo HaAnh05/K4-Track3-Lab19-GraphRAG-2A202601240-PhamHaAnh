@@ -1,7 +1,7 @@
 # Báo Cáo Thực Hành & Thuyết Minh Kỹ Thuật — Lab 19: GraphRAG vs Flat RAG
 
-**Học viên:** AICB-K34 Student  
-**Khóa học:** AICB-K34 · Track 3: GraphRAG  
+**Học viên:** Phạm Hà Anh  
+**Mã học viên:** 2A202601240  
 **Môi trường thực thi:** Python 3.11 (Conda `rag`) + Neo4j AuraDB + Groq (`openai/gpt-oss-20b` / `qwen/qwen3.6-27b`)  
 **Bộ dữ liệu Benchmark:** `data/graphrag_golden_50_first5000.csv` (25 câu hỏi test đa dạng)  
 **Ngày thực hiện:** 20/08/2026  

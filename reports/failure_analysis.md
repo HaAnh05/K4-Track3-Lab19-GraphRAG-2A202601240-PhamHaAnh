@@ -1,7 +1,7 @@
 # Báo Cáo Phân Tích Ca Lỗi (Failure Analysis) — Lab 19: GraphRAG vs Flat RAG
 
-**Học viên:** AICB-K34 Student  
-**Khóa học:** AICB-K34 · Track 3: GraphRAG  
+**Học viên:** Phạm Hà Anh  
+**Mã học viên:** 2A202601240  
 
 ---
 
